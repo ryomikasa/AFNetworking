@@ -519,7 +519,18 @@ forHTTPHeaderField:(NSString *)field
         if (![mutableRequest valueForHTTPHeaderField:@"Content-Type"]) {
             [mutableRequest setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
         }
-        [mutableRequest setHTTPBody:[query dataUsingEncoding:self.stringEncoding]];
+//        [mutableRequest setHTTPBody:[query dataUsingEncoding:self.stringEncoding]];
+        
+        if ([[mutableRequest valueForHTTPHeaderField:@"Content-Type"] isEqualToString:@"application/json"]) {
+            NSString *pra = [NSString stringWithFormat:@"%@",parameters];
+            pra = [pra stringByReplacingOccurrencesOfString:@" " withString:@""];
+            pra = [pra stringByReplacingOccurrencesOfString:@"\r" withString:@""];
+            pra = [pra stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+            [mutableRequest setHTTPBody: [pra dataUsingEncoding:self.stringEncoding]];
+        }else{
+            [mutableRequest setHTTPBody:[query dataUsingEncoding:self.stringEncoding]];
+        }
+        
     }
 
     return mutableRequest;
